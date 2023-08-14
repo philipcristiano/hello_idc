@@ -1,0 +1,6 @@
+[auth]
+issuer_url = "https://kanidm.home.cristiano.cloud/oauth2/openid/hello_idc"
+redirect_url = "https://hello_idc.home.cristiano.cloud/auth"
+client_id = "client_id"
+client_secret = "foo"
+
