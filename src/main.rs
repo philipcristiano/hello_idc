@@ -6,6 +6,7 @@ use axum::{
     Router,
 };
 use clap::Parser;
+use maud::{html, DOCTYPE};
 use serde::Deserialize;
 use std::fs;
 use std::net::SocketAddr;
@@ -69,8 +70,13 @@ async fn main() {
 }
 
 // basic handler that responds with a static string
-async fn root() -> &'static str {
-    "Hello, World!"
+async fn root() -> Response {
+    html! {
+       (DOCTYPE)
+            p { "Welcome!"}
+            a href="/login" { "Login" }
+    }
+    .into_response()
 }
 
 async fn oidc_login(State(config): State<auth::AuthConfig>, cookies: Cookies) -> impl IntoResponse {
@@ -95,11 +101,12 @@ struct AuthError(anyhow::Error);
 // Tell axum how to convert `AppError` into a response.
 impl IntoResponse for AuthError {
     fn into_response(self) -> Response {
-        (
-            StatusCode::UNAUTHORIZED,
-            format!("You are not authorized, try to login again at /login"),
-        )
-            .into_response()
+        let resp = html! {
+        (DOCTYPE)
+            p { "You are not authorized"}
+            a href="/login" { "Restart" }
+        };
+        (StatusCode::UNAUTHORIZED, resp).into_response()
     }
 }
 
@@ -142,14 +149,16 @@ async fn oidc_login_auth(
 
     let claims = auth::next(auth_client, auth_verify, oidc_auth_code.code).await?;
 
-    let resp = format!(
-        "User {} with e-mail address {} has authenticated successfully",
-        claims.subject().as_str(),
-        claims
-            .email()
-            .map(|email| email.as_str())
-            .unwrap_or("<not provided>"),
-    );
+    let resp = html! {
+        (DOCTYPE)
+        p { "User " (claims.subject().as_str()) " has authenticated successfully"}
+        p { "Email: " (
+                        claims
+                        .email()
+                        .map(|email| email.as_str())
+                        .unwrap_or("<not provided>")) }
+        a href="/login" { "Restart" }
+    };
 
     Ok(resp.into_response())
 }
