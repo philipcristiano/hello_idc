@@ -18,7 +18,7 @@ pub struct AuthConfig {
     issuer_url: Url,
     redirect_url: RedirectUrl,
     client_id: String,
-    client_secret: String,
+    client_secret: ClientSecret,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -50,7 +50,7 @@ pub async fn construct_client(auth_config: AuthConfig) -> Result<CoreClient, Box
         //ClientId::new("client_id".to_string()),
         //Some(ClientSecret::new("client_secret".to_string())),
         ClientId::new(auth_config.client_id),
-        Some(ClientSecret::new(auth_config.client_secret)),
+        Some(auth_config.client_secret),
     )
     // Set the URL the user will be redirected to after the authorization process.
     //.set_redirect_uri(RedirectUrl::new("http://redirect".to_string())?);
