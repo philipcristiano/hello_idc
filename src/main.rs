@@ -23,8 +23,6 @@ pub struct Args {
     bind_addr: String,
     #[arg(short, long, default_value = "oidc.toml")]
     config_file: String,
-    #[arg(short, long, num_args=0.. )]
-    default_relay: Option<Vec<String>>,
 }
 
 mod auth;
