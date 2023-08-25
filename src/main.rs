@@ -32,6 +32,7 @@ pub struct Args {
 }
 
 mod auth;
+mod app_init;
 
 #[derive(Clone, Debug, Deserialize)]
 struct AppConfig {
@@ -46,13 +47,7 @@ async fn main() {
 
     let args = Args::parse();
 
-    let subscriber = tracing_subscriber::fmt().with_max_level(args.log_level);
-    if args.log_json {
-        subscriber.json().init()
-    } else {
-        subscriber.init()
-    };
-
+    app_init::logging(args.log_level, args.log_json);
 
     let config_file_error_msg = format!("Could not read config file {}", args.config_file);
     let config_file_contents = fs::read_to_string(args.config_file).expect(&config_file_error_msg);
