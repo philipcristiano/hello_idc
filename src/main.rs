@@ -11,6 +11,7 @@ use serde::Deserialize;
 use std::fs;
 use std::net::SocketAddr;
 
+use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
 use once_cell::sync::OnceCell;
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies, Key};
 
@@ -23,14 +24,21 @@ pub struct Args {
     bind_addr: String,
     #[arg(short, long, default_value = "oidc.toml")]
     config_file: String,
+    #[arg(short, long, value_enum, default_value = "INFO")]
+    log_level: tracing::Level,
+    #[arg(long, action)]
+    log_json: bool,
 }
 
+mod app_init;
 mod auth;
 
 #[derive(Clone, Debug, Deserialize)]
 struct AppConfig {
     auth: auth::AuthConfig,
 }
+use tower_http::trace::{self, TraceLayer};
+use tracing::Level;
 
 #[tokio::main]
 async fn main() {
@@ -38,15 +46,19 @@ async fn main() {
     let my_key: &[u8] = &[0; 64]; // Your real key must be cryptographically random
     KEY.set(Key::from(my_key)).ok();
 
-    tracing_subscriber::fmt::init();
-
     let args = Args::parse();
+
+    //app_init::logging(args.log_level, args.log_json);
+    app_init::tracing(args.log_level);
+
+    // init_tracing_opentelemetry::tracing_subscriber_ext::init_subscribers().expect("Unable to setup tracing");
+
     let config_file_error_msg = format!("Could not read config file {}", args.config_file);
     let config_file_contents = fs::read_to_string(args.config_file).expect(&config_file_error_msg);
 
     let app_config: AppConfig =
         toml::from_str(&config_file_contents).expect("Problems parsing config file");
-    println!("Config {:?}", app_config);
+    tracing::debug!("Config {:?}", app_config);
 
     let app = Router::new()
         // `GET /` goes to `root`
@@ -57,10 +69,19 @@ async fn main() {
         )
         .route("/login_auth", get(oidc_login_auth))
         .with_state(app_config.auth.clone())
-        .layer(CookieManagerLayer::new());
+        .layer(CookieManagerLayer::new())
+        // include trace context as header into the response
+        .layer(OtelInResponseLayer::default())
+        //start OpenTelemetry trace on incoming request
+        .layer(OtelAxumLayer::default())
+        .layer(
+            TraceLayer::new_for_http()
+                .make_span_with(trace::DefaultMakeSpan::new().level(Level::INFO))
+                .on_response(trace::DefaultOnResponse::new().level(Level::INFO)),
+        );
 
     let addr: SocketAddr = args.bind_addr.parse().expect("Expected bind addr");
-    tracing::info!("listening on {}", addr);
+    tracing::info!("listening on http://{}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
@@ -77,6 +98,9 @@ async fn root() -> Response {
     .into_response()
 }
 
+use tracing::instrument;
+
+#[instrument]
 async fn oidc_login(State(config): State<auth::AuthConfig>, cookies: Cookies) -> impl IntoResponse {
     let auth_client = auth::construct_client(config.clone()).await.unwrap();
     let auth_content = auth::get_auth_url(auth_client).await;
@@ -94,11 +118,13 @@ struct OIDCAuthCode {
     state: String,
 }
 
+#[derive(Debug)]
 struct AuthError(anyhow::Error);
 
 // Tell axum how to convert `AppError` into a response.
 impl IntoResponse for AuthError {
     fn into_response(self) -> Response {
+        tracing::info!("Auth error {:?}", self);
         let resp = html! {
         (DOCTYPE)
             p { "You are not authorized"}
@@ -124,6 +150,7 @@ where
     }
 }
 
+#[instrument]
 async fn oidc_login_auth(
     State(config): State<auth::AuthConfig>,
     cookies: Cookies,
@@ -141,7 +168,7 @@ async fn oidc_login_auth(
     let auth_verify: auth::AuthVerify = serde_json::from_str(&cookie_str)?;
 
     if auth_verify.csrf_token.secret() != &oidc_auth_code.state {
-        println!("CSRF State doesn't match, should raise error");
+        tracing::error!("CSRF State doesn't match");
         return Ok(StatusCode::UNAUTHORIZED.into_response());
     }
 

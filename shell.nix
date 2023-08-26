@@ -3,8 +3,8 @@ let
   releasedPkgs = sysPkg.fetchFromGitHub {
     owner = "NixOS";
     repo = "nixpkgs";
-    rev = "23.05";
-    sha256 = "sha256-btHN1czJ6rzteeCuE/PNrdssqYD2nIA4w48miQAFloM=";
+    rev = "26e8da26b4089966dce23f36741dd2be35fbeedc"; # master as of 2023-08-255
+    sha256 = "sha256-zwjRPOC8ES0yQ684j+EC+Ggw6gXar4WiZF7Zt9ufRtk=";
   };
   pkgs = import releasedPkgs {};
   stdenv = pkgs.stdenv;

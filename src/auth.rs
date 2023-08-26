@@ -3,8 +3,9 @@ use openidconnect::core::{
     CoreAuthenticationFlow, CoreClient, CoreGenderClaim, CoreProviderMetadata,
 };
 use openidconnect::{
-    AccessTokenHash, AuthorizationCode, ClientId, ClientSecret, CsrfToken, EmptyAdditionalClaims,
-    IdTokenClaims, IssuerUrl, Nonce, PkceCodeChallenge, PkceCodeVerifier, RedirectUrl, Scope,
+    AccessTokenHash, AdditionalClaims, AuthorizationCode, ClientId, ClientSecret, CsrfToken,
+    EmptyAdditionalClaims, IdTokenClaims, IssuerUrl, Nonce, PkceCodeChallenge, PkceCodeVerifier,
+    RedirectUrl, Scope, UserInfoClaims,
 };
 use serde::{Deserialize, Serialize};
 
@@ -33,6 +34,13 @@ pub struct AuthVerify {
     nonce: Nonce,
     pub csrf_token: CsrfToken,
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+struct GroupClaims {
+    scopes: Vec<String>,
+    groups: Vec<String>,
+}
+impl AdditionalClaims for GroupClaims {}
 
 // Use OpenID Connect Discovery to fetch the provider metadata.
 use openidconnect::{OAuth2TokenResponse, TokenResponse};
@@ -134,6 +142,17 @@ pub async fn next(
             .map(|email| email.as_str())
             .unwrap_or("<not provided>"),
     );
+    // The user_info request uses the AccessToken returned in the token response. To parse custom
+    // claims, use UserInfoClaims directly (with the desired type parameters) rather than using the
+    // CoreUserInfoClaims type alias.
+    let userinfo_claims: UserInfoClaims<GroupClaims, CoreGenderClaim> = client
+        .user_info(token_response.access_token().to_owned(), None)
+        .map_err(|err| anyhow!("No user info endpoint: {:?}", err))?
+        .request_async(async_http_client)
+        .await
+        .map_err(|err| anyhow!("Failed requesting user info: {:?}", err))?;
+
+    println!("Userinfo: {:?},", userinfo_claims);
 
     // If available, we can use the UserInfo endpoint to request additional information.
 
@@ -142,6 +161,6 @@ pub async fn next(
     // CoreUserInfoClaims type alias.
 
     // See the OAuth2TokenResponse trait for a listing of other available fields such as
-    return Ok(claims.clone());
     // access_token() and refresh_token().
+    return Ok(claims.clone());
 }
