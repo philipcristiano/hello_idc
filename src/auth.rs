@@ -3,10 +3,9 @@ use openidconnect::core::{
     CoreAuthenticationFlow, CoreClient, CoreGenderClaim, CoreProviderMetadata,
 };
 use openidconnect::{
-    AccessTokenHash, AuthorizationCode, ClientId, ClientSecret, CsrfToken, EmptyAdditionalClaims,
-    IdTokenClaims, IssuerUrl, Nonce, PkceCodeChallenge, PkceCodeVerifier, RedirectUrl, Scope,
-    AdditionalClaims,
-    UserInfoClaims,
+    AccessTokenHash, AdditionalClaims, AuthorizationCode, ClientId, ClientSecret, CsrfToken,
+    EmptyAdditionalClaims, IdTokenClaims, IssuerUrl, Nonce, PkceCodeChallenge, PkceCodeVerifier,
+    RedirectUrl, Scope, UserInfoClaims,
 };
 use serde::{Deserialize, Serialize};
 
@@ -149,11 +148,11 @@ pub async fn next(
     let userinfo_claims: UserInfoClaims<GroupClaims, CoreGenderClaim> = client
         .user_info(token_response.access_token().to_owned(), None)
         .map_err(|err| anyhow!("No user info endpoint: {:?}", err))?
-        .request_async(async_http_client).await
+        .request_async(async_http_client)
+        .await
         .map_err(|err| anyhow!("Failed requesting user info: {:?}", err))?;
 
     println!("Userinfo: {:?},", userinfo_claims);
-
 
     // If available, we can use the UserInfo endpoint to request additional information.
 
