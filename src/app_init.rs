@@ -29,7 +29,7 @@ pub fn logging(level: Level, is_json: bool) {
 
 pub fn tracing(level: Level) {
     let subscriber = registry()
-        .with(OpenTelemetryLayer::new(init_tracer()).with_filter(LevelFilter::from_level(level)))
+        .with(OpenTelemetryLayer::new(init_tracer()))
         .with(
             tracing_subscriber::fmt::layer()
                 .json()
