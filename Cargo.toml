@@ -8,7 +8,6 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.75"
 axum = "0.6.18"
-axum-tracing-opentelemetry = "0.13.1"
 clap = { version = "4.3.23", features = ["derive", "env"]}
 maud = { version = "0.25.0", features = ["axum"] }
 once_cell = "1.18.0"

@@ -13,10 +13,10 @@ use opentelemetry_sdk::{
     Resource,
 };
 use opentelemetry_semantic_conventions::{
-    resource::{DEPLOYMENT_ENVIRONMENT, SERVICE_NAME, SERVICE_VERSION},
+    resource::{SERVICE_NAME, SERVICE_VERSION},
     SCHEMA_URL,
 };
-use tracing_opentelemetry::{MetricsLayer, OpenTelemetryLayer};
+use tracing_opentelemetry::OpenTelemetryLayer;
 
 pub fn logging(level: Level, is_json: bool) {
     let subscriber = tracing_subscriber::fmt().with_max_level(level);
@@ -29,7 +29,7 @@ pub fn logging(level: Level, is_json: bool) {
 
 pub fn tracing(level: Level) {
     let subscriber = registry()
-        .with(OpenTelemetryLayer::new(init_tracer()))
+        .with(OpenTelemetryLayer::new(init_tracer()).with_exception_field_propagation(true))
         .with(
             tracing_subscriber::fmt::layer()
                 .json()

@@ -45,6 +45,7 @@ impl AdditionalClaims for GroupClaims {}
 // Use OpenID Connect Discovery to fetch the provider metadata.
 use openidconnect::{OAuth2TokenResponse, TokenResponse};
 
+#[tracing::instrument]
 pub async fn construct_client(auth_config: AuthConfig) -> Result<CoreClient, Box<dyn Error>> {
     let provider_metadata = CoreProviderMetadata::discover_async(
         //&IssuerUrl::new("https://accounts.example.com".to_string())?,
@@ -65,6 +66,8 @@ pub async fn construct_client(auth_config: AuthConfig) -> Result<CoreClient, Box
     .set_redirect_uri(auth_config.redirect_url);
     return Ok(client);
 }
+
+#[tracing::instrument]
 pub async fn get_auth_url(client: CoreClient) -> AuthContent {
     // Create an OpenID Connect client by specifying the client ID, client secret, authorization URL
     // and token URL.
@@ -99,6 +102,7 @@ pub async fn get_auth_url(client: CoreClient) -> AuthContent {
     return ac;
 }
 
+#[tracing::instrument]
 pub async fn next(
     client: CoreClient,
     auth_verify: AuthVerify,
