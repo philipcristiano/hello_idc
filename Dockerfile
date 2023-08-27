@@ -12,7 +12,7 @@ COPY . .
 RUN cargo install --path .
 
 FROM debian:bullseye-slim
-RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y procps ca-certificates && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /usr/local/cargo/bin/hello_idc /usr/local/bin/hello_idc
 
 ENTRYPOINT ["/usr/local/bin/hello_idc"]
