@@ -5,6 +5,7 @@ use axum::{
     routing::get,
     Router,
 };
+use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
 use clap::Parser;
 use maud::{html, DOCTYPE};
 use serde::Deserialize;
@@ -67,16 +68,17 @@ async fn main() {
         .route("/login_auth", get(oidc_login_auth))
         .with_state(app_config.auth.clone())
         .layer(CookieManagerLayer::new())
-        .layer(
-            TraceLayer::new_for_http()
-                .make_span_with(trace::DefaultMakeSpan::new().level(Level::INFO))
-                .on_response(trace::DefaultOnResponse::new().level(Level::INFO)),
-        );
+        // include trace context as header into the response
+        .layer(OtelInResponseLayer::default())
+        //start OpenTelemetry trace on incoming request
+        .layer(OtelAxumLayer::default());
 
     let addr: SocketAddr = args.bind_addr.parse().expect("Expected bind addr");
     tracing::info!("listening on http://{}", addr);
     axum::Server::bind(&addr)
-        .serve(app.into_make_service())
+        // we must use `into_make_service_with_connect_info` for `opentelemetry_tracing_layer` to
+        // access the client ip
+        .serve(app.into_make_service_with_connect_info::<SocketAddr>())
         .await
         .unwrap();
 }
