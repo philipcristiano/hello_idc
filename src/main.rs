@@ -11,7 +11,6 @@ use serde::Deserialize;
 use std::fs;
 use std::net::SocketAddr;
 
-use axum_tracing_opentelemetry::middleware::{OtelAxumLayer, OtelInResponseLayer};
 use once_cell::sync::OnceCell;
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies, Key};
 
@@ -51,8 +50,6 @@ async fn main() {
     //app_init::logging(args.log_level, args.log_json);
     app_init::tracing(args.log_level);
 
-    // init_tracing_opentelemetry::tracing_subscriber_ext::init_subscribers().expect("Unable to setup tracing");
-
     let config_file_error_msg = format!("Could not read config file {}", args.config_file);
     let config_file_contents = fs::read_to_string(args.config_file).expect(&config_file_error_msg);
 
@@ -70,10 +67,6 @@ async fn main() {
         .route("/login_auth", get(oidc_login_auth))
         .with_state(app_config.auth.clone())
         .layer(CookieManagerLayer::new())
-        // include trace context as header into the response
-        .layer(OtelInResponseLayer::default())
-        //start OpenTelemetry trace on incoming request
-        .layer(OtelAxumLayer::default())
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(trace::DefaultMakeSpan::new().level(Level::INFO))
@@ -98,9 +91,7 @@ async fn root() -> Response {
     .into_response()
 }
 
-use tracing::instrument;
-
-#[instrument]
+#[tracing::instrument]
 async fn oidc_login(State(config): State<auth::AuthConfig>, cookies: Cookies) -> impl IntoResponse {
     let auth_client = auth::construct_client(config.clone()).await.unwrap();
     let auth_content = auth::get_auth_url(auth_client).await;
@@ -150,7 +141,7 @@ where
     }
 }
 
-#[instrument]
+#[tracing::instrument]
 async fn oidc_login_auth(
     State(config): State<auth::AuthConfig>,
     cookies: Cookies,

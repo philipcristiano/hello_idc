@@ -8,13 +8,11 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.75"
 axum = "0.6.18"
-axum-tracing-opentelemetry = "0.13.1"
 clap = { version = "4.3.23", features = ["derive", "env"]}
-init-tracing-opentelemetry = { version = "0.13.1", features = ["tracing_subscriber_ext"] }
 maud = { version = "0.25.0", features = ["axum"] }
 once_cell = "1.18.0"
 openidconnect = "3.3.0"
-opentelemetry = "0.20.0"
+opentelemetry = { version = "0.20.0", features = ["rt-tokio"] }
 opentelemetry-otlp = { version = "0.13.0", features = ["grpc-tonic", "http-proto"] }
 opentelemetry-semantic-conventions = "0.12.0"
 opentelemetry_sdk = "0.20.0"

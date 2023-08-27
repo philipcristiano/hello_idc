@@ -1,4 +1,3 @@
-use init_tracing_opentelemetry::tracing_subscriber_ext;
 use tracing::Level;
 use tracing_subscriber::filter::LevelFilter;
 use tracing_subscriber::prelude::*;
@@ -30,14 +29,15 @@ pub fn logging(level: Level, is_json: bool) {
 
 pub fn tracing(level: Level) {
     let subscriber = registry()
-        //.with(tracing_subscriber_ext::build_otel_layer().expect("Couldn't setup otel layer"))
-        .with(OpenTelemetryLayer::new(init_tracer()))
+        .with(OpenTelemetryLayer::new(init_tracer()).with_filter(LevelFilter::from_level(level)))
         .with(
             tracing_subscriber::fmt::layer()
                 .json()
                 .with_filter(LevelFilter::from_level(level)),
         );
-    tracing::subscriber::set_global_default(subscriber).expect("Could not setup tracing/logging")
+    tracing::subscriber::set_global_default(subscriber).expect("Could not setup tracing/logging");
+
+    tracing::info!("Tracing resource {:?}", resource());
 }
 
 // Create a Resource that captures information about the entity for which telemetry is recorded.
@@ -47,9 +47,8 @@ pub fn tracing(level: Level) {
 fn resource() -> Resource {
     Resource::from_schema_url(
         [
-            KeyValue::new(SERVICE_NAME, "app_init"),
-            KeyValue::new(SERVICE_VERSION, "0.1.0"),
-            KeyValue::new(DEPLOYMENT_ENVIRONMENT, "develop"),
+            KeyValue::new(SERVICE_NAME, env!("CARGO_PKG_NAME")),
+            KeyValue::new(SERVICE_VERSION, env!("CARGO_PKG_VERSION")),
         ],
         SCHEMA_URL,
     )
