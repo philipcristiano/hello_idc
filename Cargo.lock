@@ -814,7 +814,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "toml",
- "tonic 0.10.0",
+ "tonic 0.10.1",
  "tower-cookies",
  "tower-http",
  "tracing",
@@ -1816,9 +1816,9 @@ checksum = "d626bb9dae77e28219937af045c257c28bfd3f69333c512553507f5f9798cb76"
 
 [[package]]
 name = "rustls"
-version = "0.21.6"
+version = "0.21.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1d1feddffcfcc0b33f5c6ce9a29e341e4cd59c3f78e7ee45f4a40c038b1d6cbb"
+checksum = "cd8d6c9f025a446bc4d18ad9632e69aec8f287aa84499ee335599fabd20c3fd8"
 dependencies = [
  "log",
  "ring",
@@ -2383,9 +2383,9 @@ dependencies = [
 
 [[package]]
 name = "tonic"
-version = "0.10.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5469afaf78a11265c343a88969045c1568aa8ecc6c787dbf756e92e70f199861"
+checksum = "14c00bc15e49625f3d2f20b17082601e5e17cf27ead69e805174026c194b6664"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -2400,6 +2400,7 @@ dependencies = [
  "percent-encoding",
  "pin-project",
  "prost 0.12.0",
+ "rustls",
  "rustls-native-certs",
  "rustls-pemfile",
  "tokio",
