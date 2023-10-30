@@ -13,7 +13,7 @@ jobs:
       pull-requests: write
     uses: "philipcristiano/workflows/.github/workflows/automerge_dependabot.yml@main"
     with:
-      automerge: 'true'
+      automerge: true
 
   docker_build:
     uses: "philipcristiano/workflows/.github/workflows/docker-build.yml@main"
