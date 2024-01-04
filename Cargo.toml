@@ -11,7 +11,11 @@ license = "Apache-2.0"
 anyhow = "1.0.78"
 axum = "0.7.3"
 clap = { version = "4.4.12", features = ["derive", "env"]}
-maud = { version = "0.25.0", features = ["axum"] }
+
+# Waiting on a release of maud to have axum 0.7 compat
+# maud = { version = "0.25.0", features = ["axum"] }
+maud = { git = "https://github.com/lambda-fairy/maud.git", rev="320add8", features = ["axum"] }
+
 once_cell = "1.19.0"
 openidconnect = "3.4.0"
 serde = { version = "1.0", features = ["derive"] }
