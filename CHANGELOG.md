@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2](https://github.com/philipcristiano/hello_idc/compare/v0.1.1...v0.1.2) - 2023-12-12
+
+### Other
+- *(deps)* bump agenthunt/conventional-commit-checker-action
+
 ## [0.1.1](https://github.com/philipcristiano/HelloIDC/compare/v0.1.0...v0.1.1) - 2023-12-05
 
 ### Other
