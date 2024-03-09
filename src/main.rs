@@ -11,11 +11,8 @@ use serde::Deserialize;
 use std::fs;
 use std::net::SocketAddr;
 
-use once_cell::sync::OnceCell;
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies, Key};
 
-const COOKIE_NAME: &str = "auth_flow";
-static KEY: OnceCell<Key> = OnceCell::new();
 
 #[derive(Parser, Debug)]
 pub struct Args {
@@ -29,11 +26,9 @@ pub struct Args {
     log_json: bool,
 }
 
-mod auth;
-
 #[derive(Clone, Debug, Deserialize)]
 struct AppConfig {
-    auth: auth::AuthConfig,
+    auth: service_conventions::oidc::AuthConfig,
 }
 use tower_http::trace::{self, TraceLayer};
 use tracing::Level;
@@ -41,8 +36,6 @@ use tracing::Level;
 #[tokio::main]
 async fn main() {
     // initialize tracing
-    let my_key: &[u8] = &[0; 64]; // Your real key must be cryptographically random
-    KEY.set(Key::from(my_key)).ok();
 
     let args = Args::parse();
 
@@ -55,14 +48,11 @@ async fn main() {
         toml::from_str(&config_file_contents).expect("Problems parsing config file");
     tracing::debug!("Config {:?}", app_config);
 
+    let oidc_router = service_conventions::oidc::router(app_config.auth.clone());
     let app = Router::new()
         // `GET /` goes to `root`
         .route("/", get(root))
-        .route(
-            "/login",
-            get(oidc_login).with_state(app_config.auth.clone()),
-        )
-        .route("/login_auth", get(oidc_login_auth))
+        .nest("/oidc", oidc_router)
         .with_state(app_config.auth.clone())
         .layer(CookieManagerLayer::new())
         .layer(
@@ -76,101 +66,12 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
-
 // basic handler that responds with a static string
 async fn root() -> Response {
     html! {
        (DOCTYPE)
             p { "Welcome!"}
-            a href="/login" { "Login" }
+            a href="/oidc/login" { "Login" }
     }
     .into_response()
-}
-
-#[tracing::instrument]
-async fn oidc_login(State(config): State<auth::AuthConfig>, cookies: Cookies) -> impl IntoResponse {
-    let auth_client = auth::construct_client(config.clone()).await.unwrap();
-    let auth_content = auth::get_auth_url(auth_client).await;
-    let key = KEY.get().unwrap();
-    let private_cookies = cookies.private(key);
-    let cookie_val = serde_json::to_string(&auth_content.verify).unwrap();
-    private_cookies.add(Cookie::new(COOKIE_NAME, cookie_val));
-
-    Redirect::temporary(&auth_content.redirect_url.to_string())
-}
-
-#[derive(Debug, Deserialize)]
-struct OIDCAuthCode {
-    code: String,
-    state: String,
-}
-
-#[derive(Debug)]
-struct AuthError(anyhow::Error);
-
-// Tell axum how to convert `AppError` into a response.
-impl IntoResponse for AuthError {
-    fn into_response(self) -> Response {
-        tracing::info!("Auth error {:?}", self);
-        let resp = html! {
-        (DOCTYPE)
-            p { "You are not authorized"}
-            a href="/login" { "Restart" }
-        };
-        (StatusCode::UNAUTHORIZED, resp).into_response()
-    }
-}
-
-// impl From<serde_json::Error> for AuthError {
-//     fn from(_err: serde_json::Error) -> AuthError {
-//         AuthError(anyhow::anyhow!("Json serialization error"))
-//     }
-// }
-// This enables using `?` on functions that return `Result<_, anyhow::Error>` to turn them into
-// `Result<_, AppError>`. That way you don't need to do that manually.
-impl<E> From<E> for AuthError
-where
-    E: Into<anyhow::Error>,
-{
-    fn from(err: E) -> Self {
-        Self(err.into())
-    }
-}
-
-#[tracing::instrument]
-async fn oidc_login_auth(
-    State(config): State<auth::AuthConfig>,
-    cookies: Cookies,
-    Query(oidc_auth_code): Query<OIDCAuthCode>,
-) -> Result<Response, AuthError> {
-    let auth_client = auth::construct_client(config.clone()).await.unwrap();
-    let key = KEY.get().unwrap();
-    let private_cookies = cookies.private(key);
-    let cookie = match private_cookies.get(COOKIE_NAME) {
-        Some(c) => c,
-        _ => return Ok(StatusCode::UNAUTHORIZED.into_response()),
-    };
-
-    let cookie_str = cookie.value();
-    let auth_verify: auth::AuthVerify = serde_json::from_str(&cookie_str)?;
-
-    if auth_verify.csrf_token.secret() != &oidc_auth_code.state {
-        tracing::error!("CSRF State doesn't match");
-        return Ok(StatusCode::UNAUTHORIZED.into_response());
-    }
-
-    let claims = auth::next(auth_client, auth_verify, oidc_auth_code.code).await?;
-
-    let resp = html! {
-        (DOCTYPE)
-        p { "User " (claims.subject().as_str()) " has authenticated successfully"}
-        p { "Email: " (
-                        claims
-                        .email()
-                        .map(|email| email.as_str())
-                        .unwrap_or("<not provided>")) }
-        a href="/login" { "Restart" }
-    };
-
-    Ok(resp.into_response())
 }
