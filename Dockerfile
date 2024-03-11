@@ -1,14 +1,8 @@
 FROM rust:1.76-bookworm as builder
 WORKDIR /usr/src/app
 
-COPY Cargo.toml Cargo.lock /usr/src/app/
-RUN \
-    mkdir /usr/src/app/src && \
-    echo 'fn main() {}' > /usr/src/app/src/main.rs && \
-    cargo build --release && \
-    rm -Rvf /usr/src/app/src
-
 COPY . .
+RUN cargo build --release
 RUN cargo install --path .
 
 FROM debian:bookworm-slim
