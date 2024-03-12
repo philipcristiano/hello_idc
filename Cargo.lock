@@ -694,6 +694,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "email_address"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e2153bd83ebc09db15bcbdc3e2194d901804952e3dc96967e1cd3b0c5c32d112"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "encoding_rs"
 version = "0.8.33"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2290,12 +2299,16 @@ dependencies = [
 
 [[package]]
 name = "service_conventions"
-version = "0.0.4"
+version = "0.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2562b0be11afa980e5b44285f6a0d50a26039ea2e46d710ce7122744089d8484"
+checksum = "ce552960213bd70a576fe9b3eebd177e510dc334bcab62ef143f8ab67669a3db"
 dependencies = [
  "anyhow",
+ "async-trait",
  "axum 0.7.4",
+ "axum-core 0.4.3",
+ "email_address",
+ "http 1.1.0",
  "maud",
  "once_cell",
  "openidconnect",
