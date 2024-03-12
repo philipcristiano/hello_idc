@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4](https://github.com/philipcristiano/hello_idc/compare/v0.1.3...v0.1.4) (2024-03-12)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate anyhow to 1.0.81 ([64cc28b](https://github.com/philipcristiano/hello_idc/commit/64cc28b7cafd5946a34d8ce5b44b31316d4ef84d))
+* Include dockerfile cache for cargo ([9f6a6d7](https://github.com/philipcristiano/hello_idc/commit/9f6a6d787eadab3a655332db8b18def99e0e2256))
+
 ## [0.1.3](https://github.com/philipcristiano/hello_idc/compare/v0.1.2...v0.1.3) (2024-03-11)
 
 
