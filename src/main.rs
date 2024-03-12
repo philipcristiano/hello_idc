@@ -52,6 +52,7 @@ async fn main() {
     let app = Router::new()
         // `GET /` goes to `root`
         .route("/", get(root))
+        .route("/user", get(user_handler))
         .nest("/oidc", oidc_router)
         .with_state(app_config.auth.clone())
         .layer(CookieManagerLayer::new())
@@ -71,6 +72,22 @@ async fn root() -> Response {
     html! {
        (DOCTYPE)
             p { "Welcome!"}
+            a href="/oidc/login" { "Login" }
+    }
+    .into_response()
+}
+
+async fn user_handler(user: service_conventions::oidc::OIDCUser) -> Response {
+    html! {
+       (DOCTYPE)
+            p { "Welcome! " ( user.id)}
+            @if let Some(name) = user.name {
+                p{ ( name ) }
+            }
+            @if let Some(email) = user.email {
+                p{ ( email ) }
+            }
+
             a href="/oidc/login" { "Login" }
     }
     .into_response()
