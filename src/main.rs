@@ -77,18 +77,27 @@ async fn root() -> Response {
     .into_response()
 }
 
-async fn user_handler(user: service_conventions::oidc::OIDCUser) -> Response {
-    html! {
-       (DOCTYPE)
-            p { "Welcome! " ( user.id)}
-            @if let Some(name) = user.name {
-                p{ ( name ) }
-            }
-            @if let Some(email) = user.email {
-                p{ ( email ) }
-            }
+async fn user_handler(user: Option<service_conventions::oidc::OIDCUser>) -> Response {
+    if let Some(user) = user {
+        html! {
+         (DOCTYPE)
+              p { "Welcome! " ( user.id)}
+              @if let Some(name) = user.name {
+                  p{ ( name ) }
+              }
+              @if let Some(email) = user.email {
+                  p{ ( email ) }
+              }
 
+              a href="/oidc/login" { "Login" }
+        }
+        .into_response()
+    } else {
+
+        html! {
+         (DOCTYPE)
+            p { "Welcome! You need to login" }
             a href="/oidc/login" { "Login" }
+        }.into_response()
     }
-    .into_response()
 }
