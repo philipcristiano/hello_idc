@@ -28,7 +28,24 @@ pub struct Args {
 
 #[derive(Clone, Debug, Deserialize)]
 struct AppConfig {
+    auth: service_conventions::oidc::OIDCConfig,
+}
+#[derive(Clone, Debug)]
+struct AppState {
     auth: service_conventions::oidc::AuthConfig,
+}
+
+impl From<AppConfig> for AppState {
+    fn from(item: AppConfig) -> Self {
+        let auth_config = service_conventions::oidc::AuthConfig{
+            oidc_config: item.auth,
+            post_auth_path: "/user".to_string(),
+            scopes: vec!("profile".to_string(), "email".to_string())
+        };
+        AppState {
+            auth: auth_config
+        }
+    }
 }
 use tower_http::trace::{self, TraceLayer};
 use tracing::Level;
@@ -46,15 +63,15 @@ async fn main() {
 
     let app_config: AppConfig =
         toml::from_str(&config_file_contents).expect("Problems parsing config file");
-    tracing::debug!("Config {:?}", app_config);
+    let app_state: AppState = app_config.into();
 
-    let oidc_router = service_conventions::oidc::router(app_config.auth.clone());
+    let oidc_router = service_conventions::oidc::router(app_state.auth.clone());
     let app = Router::new()
         // `GET /` goes to `root`
         .route("/", get(root))
         .route("/user", get(user_handler))
         .nest("/oidc", oidc_router)
-        .with_state(app_config.auth.clone())
+        .with_state(app_state.auth.clone())
         .layer(CookieManagerLayer::new())
         .layer(
             TraceLayer::new_for_http()
@@ -87,6 +104,18 @@ async fn user_handler(user: Option<service_conventions::oidc::OIDCUser>) -> Resp
               }
               @if let Some(email) = user.email {
                   p{ ( email ) }
+              }
+              h3 { "scopes" }
+              ul {
+                @for scope in &user.scopes {
+                    li { (scope) }
+                }
+              }
+              h3 { "groups" }
+              ul {
+                @for group in &user.groups {
+                    li { (group) }
+                }
               }
 
               a href="/oidc/login" { "Login" }
