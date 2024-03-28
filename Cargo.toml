@@ -18,7 +18,7 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 service_conventions = { version = "0.0.8", features = ["tracing", "oidc"]}
 #service_conventions = { git = "https://github.com/philipcristiano/rust_service_conventions.git", branch = "groups", features = ["tracing", "oidc"]}
-tokio = { version = "1.36.0", features = ["full"] }
+tokio = { version = "1.37.0", features = ["full"] }
 toml = "0.8.12"
 tonic = { version = "0.11.0", features = ["tls", "tls-roots"] }
 tower-cookies = { version = "0.10.0", features = ["signed", "private"]}
