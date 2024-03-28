@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1](https://github.com/philipcristiano/hello_idc/compare/v0.3.0...v0.3.1) (2024-03-28)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate axum to 0.7.5 ([f55519a](https://github.com/philipcristiano/hello_idc/commit/f55519a70ff86ebf8f0cf3379b90f358284550f8))
+* **deps:** update rust crate clap to 4.5.4 ([84a115a](https://github.com/philipcristiano/hello_idc/commit/84a115a1732fd0d041ca30bf52222dfc93dafd4b))
+* **deps:** update rust crate tokio to 1.37.0 ([396de77](https://github.com/philipcristiano/hello_idc/commit/396de7763e30a2b04be2ff8602c6f52e8ef3c254))
+
 ## [0.3.0](https://github.com/philipcristiano/hello_idc/compare/v0.2.0...v0.3.0) (2024-03-19)
 
 
