@@ -74,9 +74,7 @@ async fn main() {
         .with_state(app_state.auth.clone())
         .layer(CookieManagerLayer::new())
         .layer(
-            TraceLayer::new_for_http()
-                .make_span_with(trace::DefaultMakeSpan::new().level(Level::INFO))
-                .on_response(trace::DefaultOnResponse::new().level(Level::INFO)),
+            service_conventions::tracing_http::trace_layer(Level::INFO)
         );
 
     let addr: SocketAddr = args.bind_addr.parse().expect("Expected bind addr");
