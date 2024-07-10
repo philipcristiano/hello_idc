@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.2](https://github.com/philipcristiano/hello_idc/compare/v0.3.1...v0.3.2) (2024-07-10)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate clap to v4.5.9 ([9866185](https://github.com/philipcristiano/hello_idc/commit/98661851ef591f564d0065ac4f323c4b8befddb3))
+* **deps:** update rust crate serde to v1.0.204 ([bc7ffaf](https://github.com/philipcristiano/hello_idc/commit/bc7ffaf21889d696655c695b00b9aa47d278aed1))
+* **deps:** update rust crate service_conventions to 0.0.17 ([ce7f6d6](https://github.com/philipcristiano/hello_idc/commit/ce7f6d690ae8fb60cd4015ec87aa6e1f68594efc))
+* **deps:** update rust crate tonic to 0.12.0 ([90b4b3c](https://github.com/philipcristiano/hello_idc/commit/90b4b3ce9127538ab6d71a356d0d84ca8dbd5bc1))
+
 ## [0.3.1](https://github.com/philipcristiano/hello_idc/compare/v0.3.0...v0.3.1) (2024-07-01)
 
 
