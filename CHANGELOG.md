@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.4](https://github.com/philipcristiano/hello_idc/compare/v0.3.3...v0.3.4) (2024-07-12)
+
+
+### Bug Fixes
+
+* Add healthcheck ([155dd5f](https://github.com/philipcristiano/hello_idc/commit/155dd5f38c8eb151ae8a3e925769b86387741cf3))
+
 ## [0.3.3](https://github.com/philipcristiano/hello_idc/compare/v0.3.2...v0.3.3) (2024-07-10)
 
 
