@@ -74,8 +74,9 @@ async fn main() {
         .with_state(app_state.auth.clone())
         .layer(CookieManagerLayer::new())
         .layer(
-            service_conventions::tracing_http::trace_layer(Level::INFO)
-        );
+            service_conventions::tracing_http::trace_layer(Level::INFO))
+        .route("/_health", get(health))
+        ;
 
     let addr: SocketAddr = args.bind_addr.parse().expect("Expected bind addr");
     tracing::info!("listening on {}", addr);
@@ -90,6 +91,10 @@ async fn root() -> Response {
             a href="/oidc/login" { "Login" }
     }
     .into_response()
+}
+
+async fn health() -> Response {
+    "OK".into_response()
 }
 
 async fn user_handler(user: Option<service_conventions::oidc::OIDCUser>) -> Response {
