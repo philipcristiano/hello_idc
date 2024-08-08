@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.5](https://github.com/philipcristiano/hello_idc/compare/v0.3.4...v0.3.5) (2024-08-08)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate clap to v4.5.10 ([dd6dfe9](https://github.com/philipcristiano/hello_idc/commit/dd6dfe9b3a4930c75eae0d40989d42e24a0e14f3))
+* **deps:** update rust crate clap to v4.5.11 ([7b69b44](https://github.com/philipcristiano/hello_idc/commit/7b69b4492610179a43e6d7367a1a92e737c97fa5))
+* **deps:** update rust crate clap to v4.5.12 ([e54dc2f](https://github.com/philipcristiano/hello_idc/commit/e54dc2fc9dd65077088d2c6822e41f3e434fe545))
+* **deps:** update rust crate clap to v4.5.13 ([6aac8f0](https://github.com/philipcristiano/hello_idc/commit/6aac8f0e41e0199359ad1dd84905bd27ea452822))
+* **deps:** update rust crate clap to v4.5.14 ([b02f6e3](https://github.com/philipcristiano/hello_idc/commit/b02f6e3c9d3cbf3d3cf7bfc276bb86dad53ba9b5))
+* **deps:** update rust crate serde to v1.0.205 ([7153d20](https://github.com/philipcristiano/hello_idc/commit/7153d20691e078660b52c0ed099ba14424d1174a))
+* **deps:** update rust crate serde_json to v1.0.121 ([a9b9315](https://github.com/philipcristiano/hello_idc/commit/a9b931561a1c871b986f20270c4329dcd57cfe75))
+* **deps:** update rust crate serde_json to v1.0.122 ([bbdcd1b](https://github.com/philipcristiano/hello_idc/commit/bbdcd1b76974986dddcb73be0a0d6e843beb3538))
+* **deps:** update rust crate service_conventions to 0.0.18 ([031d991](https://github.com/philipcristiano/hello_idc/commit/031d9910854f602803cba5b9374fb778dff8b998))
+* **deps:** update rust crate service_conventions to 0.0.19 ([1bab013](https://github.com/philipcristiano/hello_idc/commit/1bab013934005ee3db8ee5d8f905e06e0360f605))
+* **deps:** update rust crate tokio to v1.38.1 ([d1e2e05](https://github.com/philipcristiano/hello_idc/commit/d1e2e056f267773b292257416dad245994397ba5))
+* **deps:** update rust crate tokio to v1.39.0 ([54b4df0](https://github.com/philipcristiano/hello_idc/commit/54b4df071e71a1f7a1e20e0b898365d343b4c949))
+* **deps:** update rust crate tokio to v1.39.1 ([cfcb9b1](https://github.com/philipcristiano/hello_idc/commit/cfcb9b12f4b299972e4abbcd9dcd4ce6e81b71bc))
+* **deps:** update rust crate tokio to v1.39.2 ([4422c96](https://github.com/philipcristiano/hello_idc/commit/4422c960b55ae8519e39b9c562d0325e3f58bba2))
+* **deps:** update rust crate toml to v0.8.15 ([cb87a73](https://github.com/philipcristiano/hello_idc/commit/cb87a73a074ab610ef93a18ec9e86ea9473dd4a3))
+* **deps:** update rust crate toml to v0.8.16 ([8397555](https://github.com/philipcristiano/hello_idc/commit/83975551c899ea131a52590b4c8c1fd65825ee9a))
+* **deps:** update rust crate toml to v0.8.17 ([b0af11a](https://github.com/philipcristiano/hello_idc/commit/b0af11a1036eb56dfe2767a69f9a6186be5c5a22))
+* **deps:** update rust crate toml to v0.8.18 ([b06a72c](https://github.com/philipcristiano/hello_idc/commit/b06a72ca67c70980d7a13c972fc38c69698bd066))
+* **deps:** update rust crate toml to v0.8.19 ([a04b827](https://github.com/philipcristiano/hello_idc/commit/a04b8273fef4737659472754360927ba727ad0e4))
+* **deps:** update rust crate tonic to v0.12.1 ([8a87719](https://github.com/philipcristiano/hello_idc/commit/8a877191ac8dafa1dd85d44673bdb7f3cafcc0bf))
+
 ## [0.3.4](https://github.com/philipcristiano/hello_idc/compare/v0.3.3...v0.3.4) (2024-07-12)
 
 
