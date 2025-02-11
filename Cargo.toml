@@ -1,6 +1,6 @@
 [package]
 name = "hello_idc"
-version = "0.3.4"
+version = "0.3.5"
 edition = "2021"
 description = "Hello World with OIDC auth"
 license = "Apache-2.0"
