@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.6](https://github.com/philipcristiano/hello_idc/compare/v0.3.5...v0.3.6) (2025-08-26)
+
+
+### Bug Fixes
+
+* Actually include cookie manager ([b829636](https://github.com/philipcristiano/hello_idc/commit/b829636dfacc341885e078e159444fa468794149))
+* **deps:** update rust crate service_conventions to 0.0.31 ([#416](https://github.com/philipcristiano/hello_idc/issues/416)) ([c745107](https://github.com/philipcristiano/hello_idc/commit/c7451077f850cf50a84466e6ce43d1dd310353d2))
+
 ## [0.3.5](https://github.com/philipcristiano/hello_idc/compare/v0.3.4...v0.3.5) (2025-08-26)
 
 
