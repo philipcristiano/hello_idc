@@ -13,7 +13,6 @@ use std::net::SocketAddr;
 
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies, Key};
 
-
 #[derive(Parser, Debug)]
 pub struct Args {
     #[arg(short, long, default_value = "127.0.0.1:3000")]
@@ -37,14 +36,12 @@ struct AppState {
 
 impl From<AppConfig> for AppState {
     fn from(item: AppConfig) -> Self {
-        let auth_config = service_conventions::oidc::AuthConfig{
+        let auth_config = service_conventions::oidc::AuthConfig {
             oidc_config: item.auth,
             post_auth_path: "/user".to_string(),
-            scopes: vec!("profile".to_string(), "email".to_string())
+            scopes: vec!["profile".to_string(), "email".to_string()],
         };
-        AppState {
-            auth: auth_config
-        }
+        AppState { auth: auth_config }
     }
 }
 use tower_http::trace::{self, TraceLayer};
@@ -70,13 +67,13 @@ async fn main() {
         // `GET /` goes to `root`
         .route("/", get(root))
         .route("/user", get(user_handler))
-        .nest("/oidc", oidc_router)
+        .nest("/oidc", oidc_router.with_state(app_state.auth.clone()))
         .with_state(app_state.auth.clone())
-        .layer(CookieManagerLayer::new())
-        .layer(
-            service_conventions::tracing_http::trace_layer(Level::INFO))
-        .route("/_health", get(health))
-        ;
+        .layer(tower_http::compression::CompressionLayer::new())
+        .layer(service_conventions::tracing_http::trace_layer(
+            tracing::Level::INFO,
+        ))
+        .route("/_health", get(health));
 
     let addr: SocketAddr = args.bind_addr.parse().expect("Expected bind addr");
     tracing::info!("listening on {}", addr);
@@ -97,8 +94,13 @@ async fn health() -> Response {
     "OK".into_response()
 }
 
-async fn user_handler(user: Option<service_conventions::oidc::OIDCUser>) -> Response {
-    if let Some(user) = user {
+async fn user_handler(
+    user: Result<
+        Option<service_conventions::oidc::OIDCUser>,
+        service_conventions::oidc::OIDCUserError,
+    >,
+) -> Response {
+    if let Ok(Some(user)) = user {
         html! {
          (DOCTYPE)
               p { "Welcome! " ( user.id)}
@@ -125,11 +127,11 @@ async fn user_handler(user: Option<service_conventions::oidc::OIDCUser>) -> Resp
         }
         .into_response()
     } else {
-
         html! {
          (DOCTYPE)
             p { "Welcome! You need to login" }
             a href="/oidc/login" { "Login" }
-        }.into_response()
+        }
+        .into_response()
     }
 }
