@@ -1,17 +1,18 @@
-FROM rust:1.89-bookworm as builder
-WORKDIR /usr/src/app
+FROM lukemathwalker/cargo-chef:latest-rust-1.89-bookworm AS chef
+WORKDIR /app
 
-COPY Cargo.toml Cargo.lock /usr/src/app/
-RUN \
-    mkdir /usr/src/app/src && \
-    echo 'fn main() {}' > /usr/src/app/src/main.rs && \
-    cargo build --release && \
-    rm -Rvf /usr/src/app/src
-
+FROM chef AS planner
 COPY . .
-RUN touch src/main.rs
-RUN cargo build --release -v
+RUN cargo chef prepare --recipe-path recipe.json
+
+FROM chef AS builder
+COPY --from=planner /app/recipe.json recipe.json
+# Build dependencies - this is the caching Docker layer!
+RUN cargo chef cook --release --recipe-path recipe.json
+# Build application
+COPY . .
 RUN cargo install --path .
+
 
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install -y procps ca-certificates && rm -rf /var/lib/apt/lists/*
