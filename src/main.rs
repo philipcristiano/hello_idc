@@ -69,6 +69,7 @@ async fn main() {
         .route("/user", get(user_handler))
         .nest("/oidc", oidc_router.with_state(app_state.auth.clone()))
         .with_state(app_state.auth.clone())
+        .layer(CookieManagerLayer::new())
         .layer(tower_http::compression::CompressionLayer::new())
         .layer(service_conventions::tracing_http::trace_layer(
             tracing::Level::INFO,
