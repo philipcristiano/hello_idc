@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.8](https://github.com/philipcristiano/hello_idc/compare/v0.3.7...v0.3.8) (2025-09-02)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate clap to v4.5.47 ([#422](https://github.com/philipcristiano/hello_idc/issues/422)) ([0bfd2fd](https://github.com/philipcristiano/hello_idc/commit/0bfd2fd23523ff72e0ac3b3060bb5ebbd88a8f8d))
+
 ## [0.3.7](https://github.com/philipcristiano/hello_idc/compare/v0.3.6...v0.3.7) (2025-08-27)
 
 
