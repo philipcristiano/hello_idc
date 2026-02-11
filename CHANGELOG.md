@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.8](https://github.com/philipcristiano/hello_idc/compare/v0.3.7...v0.3.8) (2026-02-11)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate anyhow to v1.0.100 ([#435](https://github.com/philipcristiano/hello_idc/issues/435)) ([0c979a9](https://github.com/philipcristiano/hello_idc/commit/0c979a94be02e1445452bc111e17a6bf4f64c930))
+* **deps:** update rust crate clap to v4.5.47 ([#422](https://github.com/philipcristiano/hello_idc/issues/422)) ([0bfd2fd](https://github.com/philipcristiano/hello_idc/commit/0bfd2fd23523ff72e0ac3b3060bb5ebbd88a8f8d))
+* **deps:** update rust crate clap to v4.5.48 ([#436](https://github.com/philipcristiano/hello_idc/issues/436)) ([d29ca63](https://github.com/philipcristiano/hello_idc/commit/d29ca63190b64871085e481717491ff863fd9f96))
+* **deps:** update rust crate serde to v1.0.220 ([#425](https://github.com/philipcristiano/hello_idc/issues/425)) ([b1b3419](https://github.com/philipcristiano/hello_idc/commit/b1b3419cd67a7624c093964df5dcc009630c2413))
+* **deps:** update rust crate serde to v1.0.221 ([#426](https://github.com/philipcristiano/hello_idc/issues/426)) ([492685f](https://github.com/philipcristiano/hello_idc/commit/492685f06029a0fe7818bbe870b2c70379262f31))
+* **deps:** update rust crate serde to v1.0.223 ([#429](https://github.com/philipcristiano/hello_idc/issues/429)) ([501e3d7](https://github.com/philipcristiano/hello_idc/commit/501e3d71ca01d665ece58cead14f93e3315a4bc1))
+* **deps:** update rust crate serde to v1.0.224 ([#431](https://github.com/philipcristiano/hello_idc/issues/431)) ([f1ff4bf](https://github.com/philipcristiano/hello_idc/commit/f1ff4bf3d92711e588e5e4d31351664488fceb22))
+* **deps:** update rust crate serde to v1.0.225 ([#433](https://github.com/philipcristiano/hello_idc/issues/433)) ([da32277](https://github.com/philipcristiano/hello_idc/commit/da322778fe6d666db1fd142e84228ed0d69c7790))
+* **deps:** update rust crate serde to v1.0.226 ([#437](https://github.com/philipcristiano/hello_idc/issues/437)) ([efd544b](https://github.com/philipcristiano/hello_idc/commit/efd544bb2ec0772a952ad1b18fc0675896d1b15f))
+* **deps:** update rust crate serde_json to v1.0.144 ([#427](https://github.com/philipcristiano/hello_idc/issues/427)) ([c69359e](https://github.com/philipcristiano/hello_idc/commit/c69359e3202a2c88951d82cf1adb973dfa5508a0))
+* **deps:** update rust crate serde_json to v1.0.145 ([#428](https://github.com/philipcristiano/hello_idc/issues/428)) ([52a2cda](https://github.com/philipcristiano/hello_idc/commit/52a2cda06c085ad3691e5619b659d713d758d698))
+* **deps:** update rust crate toml to v0.9.6 ([#432](https://github.com/philipcristiano/hello_idc/issues/432)) ([40d8eeb](https://github.com/philipcristiano/hello_idc/commit/40d8eebedbd4e40bcbf19d098b426a5a1915abdf))
+* **deps:** update rust crate toml to v0.9.7 ([#434](https://github.com/philipcristiano/hello_idc/issues/434)) ([061206d](https://github.com/philipcristiano/hello_idc/commit/061206d88329048d2a2147987fc9d21c150b0c99))
+
 ## [0.3.7](https://github.com/philipcristiano/hello_idc/compare/v0.3.6...v0.3.7) (2025-08-27)
 
 
